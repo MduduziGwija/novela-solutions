@@ -24,6 +24,12 @@ To receive submissions directly in your inbox instead:
 2. Copy its endpoint URL, e.g. `https://formspree.io/f/abcdwxyz`.
 3. Paste it into `formEndpoint` at the top of `assets/js/main.js`.
 
+## Analytics
+
+The live site counts visits anonymously with [Umami](https://umami.is) (no cookies, no personal data), using the same Umami website as ImbizoConnect and the Leave Management demo. Visits appear in that dashboard under the `/novela-solutions/` paths. `data-domains="mduduzigwija.github.io"` means local copies are never counted.
+
+Custom events (in `assets/js/main.js`, `track()`): `Brief sent`, `Contact form sent` (service/budget/timeline only), `Start project click`, `WhatsApp click`, `Email click`, `Phone click`, `GitHub click`, `Portfolio filter`. Never add names, emails, phone numbers or message text to events.
+
 ## Adding your photo (from your phone)
 
 1. Open https://github.com/MduduziGwija/novela-solutions/tree/main/assets/img in your phone's browser (or the GitHub app).

@@ -18,6 +18,23 @@ document.documentElement.classList.add('js');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = window.matchMedia('(pointer: fine)').matches;
 
+/* ---------- Analytics (Umami, loaded in each page's <head>) ----------
+   Anonymous events only: never send names, emails, phone numbers or messages. */
+function track(event, data) {
+  try { if (window.umami) window.umami.track(event, data); } catch { /* analytics must never break the site */ }
+}
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href]');
+  if (!a) return;
+  const href = a.getAttribute('href');
+  const where = a.closest('.site-header') ? 'nav' : a.closest('.site-menu') ? 'menu' : a.closest('.site-footer') ? 'footer' : (document.body.dataset.page || location.pathname.split('/').pop() || 'home');
+  if (href.includes('wa.me')) track('WhatsApp click', { where });
+  else if (href.startsWith('mailto:')) track('Email click', { where });
+  else if (href.startsWith('tel:')) track('Phone click', { where });
+  else if (href.includes('github.com')) track('GitHub click', { where });
+  else if (href.startsWith('talk.html')) track('Start project click', { where, service: new URL(href, location.href).searchParams.get('service') || 'none' });
+});
+
 /* ---------- Footer year ---------- */
 document.querySelectorAll('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
 
@@ -396,6 +413,7 @@ const liveObserver = !finePointer && 'IntersectionObserver' in window
       document.querySelectorAll('[data-filter]').forEach(b => b.setAttribute('aria-pressed', 'false'));
       btn.setAttribute('aria-pressed', 'true');
       render(btn.dataset.filter);
+      track('Portfolio filter', { filter: btn.dataset.filter });
     });
   });
   render('all');
@@ -438,6 +456,7 @@ function showStatus(el, type, msg) {
     btn.disabled = true;
     try {
       const mode = await sendEnquiry(`Website enquiry from ${d['First name']} ${d['Last name']}`.trim(), d);
+      track('Contact form sent', { method: mode, service: d.Service || 'none', budget: d.Budget || 'none' });
       if (mode === 'sent') {
         showStatus(status, 'ok', 'Thanks! Your message has been sent. I\'ll reply within 24 hours.');
         form.reset();
@@ -521,6 +540,7 @@ function showStatus(el, type, msg) {
     btn.disabled = true;
     try {
       const mode = await sendEnquiry(`Project brief: ${d['Project name'] || d.Service} (${d['First name']} ${d['Last name']})`, d);
+      track('Brief sent', { method: mode, service: d.Service, budget: d.Budget, timeline: d.Timeline });
       form.hidden = true; progress.hidden = true; success.hidden = false;
       success.querySelector('[data-msg]').textContent = mode === 'sent'
         ? 'I\'ve received your brief and will be in touch within 24 hours with a personalised proposal.'
