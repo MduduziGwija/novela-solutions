@@ -16,13 +16,9 @@ Shared styles are in `assets/css/styles.css` and shared behaviour in `assets/js/
 
 ## Receiving form submissions
 
-By default, both forms open the visitor's email app with the message pre-filled to `mduduzigwija@gmail.com`.
+Both forms (Contact and the project brief) send to Formspree (`https://formspree.io/f/mgavqraq`, set as `formEndpoint` at the top of `assets/js/main.js`), which emails each enquiry to `mduduzigwija@gmail.com`. Replying in Gmail answers the client directly (`_replyto`), and a hidden `_gotcha` field catches spam bots. Manage the form, view past submissions and change the delivery address in the Formspree dashboard. The free plan allows 50 submissions a month.
 
-To receive submissions directly in your inbox instead:
-
-1. Create a free form at [formspree.io](https://formspree.io) (or a similar service).
-2. Copy its endpoint URL, e.g. `https://formspree.io/f/abcdwxyz`.
-3. Paste it into `formEndpoint` at the top of `assets/js/main.js`.
+If `formEndpoint` is emptied, the forms fall back to opening the visitor's email app with the message pre-filled.
 
 ## Analytics
 

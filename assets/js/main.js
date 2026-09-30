@@ -11,7 +11,7 @@
  */
 const CONFIG = {
   email: 'mduduzigwija@gmail.com',
-  formEndpoint: '' // e.g. 'https://formspree.io/f/abcdwxyz'
+  formEndpoint: 'https://formspree.io/f/mgavqraq' // Formspree form that delivers to Gmail
 };
 
 document.documentElement.classList.add('js');
@@ -427,7 +427,8 @@ async function sendEnquiry(subject, fields) {
     const res = await fetch(CONFIG.formEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ _subject: subject, ...fields })
+      // _replyto lets you answer the client straight from your inbox.
+      body: JSON.stringify({ _subject: subject, _replyto: fields.Email, ...fields })
     });
     if (!res.ok) throw new Error(`Request failed (${res.status})`);
     return 'sent';
