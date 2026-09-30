@@ -96,13 +96,13 @@ if (header) {
   hero.addEventListener('pointerleave', () => letters.forEach(l => { l.style.transform = ''; }));
 })();
 
-/* ---------- About portrait: real photo when uploaded, tilt + parallax ---------- */
+/* ---------- About portrait: orbit photo, tilt/parallax, typing code card ---------- */
 (function portrait() {
   const fig = document.querySelector('[data-portrait]');
   if (!fig) return;
   const img = fig.querySelector('.portrait-photo');
-  // Upload your photo to assets/img/ as portrait.jpg (or .jpeg / .png / .webp).
-  // Until then the illustrated portrait is shown.
+
+  // Photo lives at assets/img/portrait.jpg (.jpeg/.png/.webp also work); the illustration shows until then.
   const candidates = ['portrait.jpg', 'portrait.jpeg', 'portrait.png', 'portrait.webp'];
   (function tryNext(i) {
     if (i >= candidates.length) return;
@@ -112,19 +112,53 @@ if (header) {
     probe.src = `assets/img/${candidates[i]}`;
   })(0);
 
+  // Tap toggles full colour on touch screens (hover does it with a mouse).
+  fig.addEventListener('click', () => fig.classList.toggle('color'));
+
+  // Typing code card.
+  const code = fig.querySelector('[data-typer]');
+  const tokens = [
+    ['k', 'const'], ['', ' dev = {\n  name: '], ['s', '"Mduduzi"'], ['', ',\n  city: '], ['s', '"Cape Town"'],
+    ['', ',\n  builds: ['], ['s', '"web"'], ['', ', '], ['s', '"apps"'], ['', ', '], ['s', '"data"'],
+    ['', '],\n  available: '], ['b', 'true'], ['', '\n};']
+  ];
+  let typing = false;
+  function type() {
+    if (typing) return;
+    typing = true;
+    code.textContent = '';
+    if (reduceMotion) {
+      tokens.forEach(([cls, text]) => { const s = document.createElement('span'); s.className = cls; s.textContent = text; code.appendChild(s); });
+      typing = false;
+      return;
+    }
+    let t = 0, c = 0, span = null;
+    (function step() {
+      if (t >= tokens.length) { typing = false; return; }
+      const [cls, text] = tokens[t];
+      if (!span) { span = document.createElement('span'); span.className = cls; code.appendChild(span); }
+      span.textContent += text[c++];
+      if (c >= text.length) { t++; c = 0; span = null; }
+      setTimeout(step, text[c - 1] === '\n' ? 140 : 28 + Math.random() * 40);
+    })();
+  }
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => { if (entries[0].isIntersecting) { type(); io.disconnect(); } }, { threshold: 0.4 });
+    io.observe(fig);
+  } else type();
+  fig.addEventListener('mouseenter', type);
+
+  // Gentle 3D tilt + parallax between photo and code card.
   if (reduceMotion || !finePointer) return;
-  const shapes = [...fig.querySelectorAll('[data-depth]')];
   fig.addEventListener('pointermove', e => {
     const r = fig.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
     fig.style.setProperty('--rx', `${(x * 8).toFixed(2)}deg`);
     fig.style.setProperty('--ry', `${(-y * 8).toFixed(2)}deg`);
-    shapes.forEach(s => { const d = Number(s.dataset.depth); s.style.transform = `translate(${x * d}px, ${y * d}px)`; });
+    fig.style.setProperty('--px', `${(x * 12).toFixed(1)}px`);
+    fig.style.setProperty('--py', `${(y * 12).toFixed(1)}px`);
   });
-  fig.addEventListener('pointerleave', () => {
-    fig.style.setProperty('--rx', '0deg'); fig.style.setProperty('--ry', '0deg');
-    shapes.forEach(s => { s.style.transform = ''; });
-  });
+  fig.addEventListener('pointerleave', () => ['--rx', '--ry', '--px', '--py'].forEach(v => fig.style.removeProperty(v)));
 })();
 
 /* ---------- Scroll reveal ---------- */

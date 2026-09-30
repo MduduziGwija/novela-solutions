@@ -246,18 +246,49 @@ h1,h2,h3{font-weight:400;color:var(--bone)}
 .band-track .dot{width:14px;height:14px}
 
 /* ---------- About / portrait ---------- */
-.about{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(32px,5vw,80px);align-items:center}
-.portrait{
-  position:relative;aspect-ratio:4/5;border-radius:var(--r-card);overflow:hidden;background:var(--ember);
-  transform:perspective(900px) rotateX(var(--ry,0deg)) rotateY(var(--rx,0deg));transition:transform .5s var(--ease);
+.about{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(32px,5vw,80px);align-items:center;padding-bottom:60px}
+#about{overflow-x:clip}
+/* Orbit portrait: circular duotone photo, rotating text ring, orbiting shapes, typing code card */
+.orbit{
+  position:relative;width:100%;max-width:540px;aspect-ratio:1;margin-inline:auto;
+  transform:perspective(1000px) rotateX(var(--ry,0deg)) rotateY(var(--rx,0deg));transition:transform .5s var(--ease);
 }
-.portrait svg,.portrait-photo{position:absolute;inset:0;width:100%;height:100%}
-.portrait-shapes *{transition:transform .6s var(--ease)}
-.portrait-photo{object-fit:cover;filter:grayscale(1) contrast(1.15);mix-blend-mode:multiply;transition:filter .6s var(--ease),mix-blend-mode 0s .3s}
-.portrait:hover .portrait-photo{filter:none;mix-blend-mode:normal;transition:filter .6s var(--ease)}
-.portrait.has-photo .portrait-illustration{display:none}
-.portrait figcaption{position:absolute;left:16px;right:16px;bottom:16px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.portrait figcaption .tag{background:var(--void)}
+.orbit-ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 40s linear infinite}
+.orbit-ring text{letter-spacing:.1em}
+.orbit-track{position:absolute;inset:3%;animation:spin 26s linear infinite reverse;pointer-events:none}
+.sat{position:absolute;display:block;border-radius:50%}
+.sat-1{width:13%;aspect-ratio:1;background:var(--art-yellow);top:-1%;left:58%}
+.sat-2{width:7%;aspect-ratio:1;background:var(--art-blue);bottom:8%;right:9%}
+.sat-3{width:11%;aspect-ratio:1;border-radius:10px;background:var(--charcoal);left:-1%;top:28%;display:grid;place-items:center;border:1px solid var(--graphite)}
+.sat-3 b{font:400 clamp(10px,1.4vw,14px)/1 var(--mono);color:var(--bone);animation:spin 26s linear infinite}
+.sat-4{width:3%;aspect-ratio:1;background:var(--ember);top:18%;right:5%}
+.orbit-stage{position:absolute;inset:0;transform:translate(var(--px,0),var(--py,0));transition:transform .5s var(--ease)}
+.orbit-photo{position:absolute;inset:11%;border-radius:50%;overflow:hidden;background:var(--ember)}
+.orbit-photo svg,.portrait-photo{position:absolute;inset:0;width:100%;height:100%}
+.portrait-photo{object-fit:cover;filter:grayscale(1) contrast(1.2) brightness(1.05);mix-blend-mode:multiply;transition:filter .7s var(--ease)}
+.orbit:hover .portrait-photo,.orbit.color .portrait-photo{filter:none;mix-blend-mode:normal}
+.orbit.has-photo .portrait-illustration{display:none}
+/* Covers background people baked out of the photo — keep aligned with the photo crop */
+.hello-dot{
+  position:absolute;left:6.5%;top:51.5%;width:34%;aspect-ratio:1;border-radius:50%;
+  background:var(--art-yellow);color:var(--charcoal);display:grid;place-items:center;font-weight:400;
+  animation:bob 5s ease-in-out infinite;
+}
+.code-card{
+  position:absolute;right:-6%;bottom:-11%;width:54%;background:var(--bone);color:var(--ink);border-radius:var(--r-card-sm);
+  transform:translate(calc(var(--px,0) * -1.4),calc(var(--py,0) * -1.4));transition:transform .5s var(--ease);
+}
+.code-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--mist)}
+.code-bar i{width:8px;height:8px;border-radius:50%;background:var(--mist)}
+.code-bar i:first-child{background:var(--ember)}
+.code-bar .mono{margin-left:auto;font-size:10px;opacity:.6}
+.code-card pre{margin:0;padding:12px 16px 14px;font:400 clamp(9.5px,1.05vw,12px)/1.6 var(--mono);white-space:pre;overflow:hidden;min-height:calc(7 * 1.6em + 26px)}
+.code-card .k{color:var(--art-violet)}
+.code-card .s{color:#d1331c}
+.code-card .b{color:var(--art-violet);font-weight:600}
+.caret{display:inline-block;width:.55em;height:1.1em;background:var(--ink);vertical-align:text-bottom;animation:tick 1s steps(1) infinite}
+.orbit-status{position:absolute;left:0;top:1%;background:var(--void);border:1px solid var(--graphite)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .about-body{color:var(--mist);margin-top:18px;max-width:560px}
 .about .sub{margin-top:18px;max-width:560px}
 .promises{list-style:none;border-top:1px solid var(--graphite)}
@@ -466,7 +497,7 @@ select.input{appearance:none;cursor:pointer;background-image:url("data:image/svg
 }
 @media (max-width:900px){
   .manifesto,.contact-grid,.cards-2,.about{grid-template-columns:1fr}
-  .portrait{max-width:440px}
+  .orbit{max-width:420px;margin-bottom:80px}
   .cases{grid-template-columns:1fr}
   .stats,.steps{grid-template-columns:1fr 1fr;row-gap:40px}
   .svc-row{grid-template-columns:48px 1fr 40px}
@@ -482,6 +513,7 @@ select.input{appearance:none;cursor:pointer;background-image:url("data:image/svg
   .nav{grid-template-columns:auto 1fr}
   .nav-center{display:none}
   .nav .combo .pill{display:none}
+  .code-card{right:0;width:62%}
   .hero{min-height:auto}
   .wordmark{padding-top:56px}
   .hero-top{flex-direction:column}
