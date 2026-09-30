@@ -96,6 +96,37 @@ if (header) {
   hero.addEventListener('pointerleave', () => letters.forEach(l => { l.style.transform = ''; }));
 })();
 
+/* ---------- About portrait: real photo when uploaded, tilt + parallax ---------- */
+(function portrait() {
+  const fig = document.querySelector('[data-portrait]');
+  if (!fig) return;
+  const img = fig.querySelector('.portrait-photo');
+  // Upload your photo to assets/img/ as portrait.jpg (or .jpeg / .png / .webp).
+  // Until then the illustrated portrait is shown.
+  const candidates = ['portrait.jpg', 'portrait.jpeg', 'portrait.png', 'portrait.webp'];
+  (function tryNext(i) {
+    if (i >= candidates.length) return;
+    const probe = new Image();
+    probe.onload = () => { img.src = probe.src; img.hidden = false; fig.classList.add('has-photo'); };
+    probe.onerror = () => tryNext(i + 1);
+    probe.src = `assets/img/${candidates[i]}`;
+  })(0);
+
+  if (reduceMotion || !finePointer) return;
+  const shapes = [...fig.querySelectorAll('[data-depth]')];
+  fig.addEventListener('pointermove', e => {
+    const r = fig.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+    fig.style.setProperty('--rx', `${(x * 8).toFixed(2)}deg`);
+    fig.style.setProperty('--ry', `${(-y * 8).toFixed(2)}deg`);
+    shapes.forEach(s => { const d = Number(s.dataset.depth); s.style.transform = `translate(${x * d}px, ${y * d}px)`; });
+  });
+  fig.addEventListener('pointerleave', () => {
+    fig.style.setProperty('--rx', '0deg'); fig.style.setProperty('--ry', '0deg');
+    shapes.forEach(s => { s.style.transform = ''; });
+  });
+})();
+
 /* ---------- Scroll reveal ---------- */
 function observeReveals(root = document) {
   const els = root.querySelectorAll('.reveal:not(.in)');
@@ -288,7 +319,7 @@ const CATS = {
 
 // Real projects only. `context` says where each was built; `tags` list only the tools actually used.
 const PROJECTS = [
-  { title: 'Lease Register — Property Tracker', desc: 'An app that lets property officers track the status of leases held for the user departments they serve. Built and used in a real workplace.', cat: 'system', context: 'Workplace project', tags: ['Power Apps', 'Power Automate', 'Microsoft Lists'], art: 'lease' },
+  { title: 'Lease Register — Property Tracker', desc: 'An internal app built for a property management team, letting property officers track the status of leases held for the departments they serve.', cat: 'system', context: 'Internal business tool', tags: ['Power Apps', 'Power Automate', 'Microsoft Lists'], art: 'lease' },
   { title: 'Leave Management App', desc: 'An app for submitting and tracking leave requests, backed by a SQL database on Supabase.', cat: 'system', context: 'Independent build', tags: ['Supabase', 'SQL'], art: 'leave' },
   { title: 'Unified University Application', desc: 'One application platform for all universities — applicants capture their details once and apply to multiple institutions from a single place.', cat: 'web', context: 'Independent build', tags: [], art: 'uni' },
   { title: 'Personal Portfolio Site', desc: 'A personal portfolio website, designed and hand-coded from scratch to showcase projects and skills.', cat: 'web', context: 'Independent build', tags: ['HTML', 'CSS', 'JavaScript'], art: 'folio' }
@@ -374,13 +405,13 @@ function showStatus(el, type, msg) {
     try {
       const mode = await sendEnquiry(`Website enquiry from ${d['First name']} ${d['Last name']}`.trim(), d);
       if (mode === 'sent') {
-        showStatus(status, 'ok', 'Thanks! Your message has been sent. We\'ll reply within 24 hours.');
+        showStatus(status, 'ok', 'Thanks! Your message has been sent. I\'ll reply within 24 hours.');
         form.reset();
       } else {
-        showStatus(status, 'ok', `Your email app should now open with your message ready — just hit send. If nothing opens, email us at ${CONFIG.email}.`);
+        showStatus(status, 'ok', `Your email app should now open with your message ready — just hit send. If nothing opens, email me at ${CONFIG.email}.`);
       }
     } catch {
-      showStatus(status, 'err', `Sorry, something went wrong. Please email us directly at ${CONFIG.email}.`);
+      showStatus(status, 'err', `Sorry, something went wrong. Please email me directly at ${CONFIG.email}.`);
     } finally {
       btn.disabled = false;
     }
@@ -458,11 +489,11 @@ function showStatus(el, type, msg) {
       const mode = await sendEnquiry(`Project brief: ${d['Project name'] || d.Service} — ${d['First name']} ${d['Last name']}`, d);
       form.hidden = true; progress.hidden = true; success.hidden = false;
       success.querySelector('[data-msg]').textContent = mode === 'sent'
-        ? 'We\'ve received your brief and will be in touch within 24 hours with a personalised proposal.'
-        : `Your email app should now be open with your brief ready to send — just hit send. If nothing opened, email us at ${CONFIG.email}.`;
+        ? 'I\'ve received your brief and will be in touch within 24 hours with a personalised proposal.'
+        : `Your email app should now be open with your brief ready to send — just hit send. If nothing opened, email me at ${CONFIG.email}.`;
       success.focus();
     } catch {
-      error.textContent = `Sorry, something went wrong. Please email us directly at ${CONFIG.email}.`;
+      error.textContent = `Sorry, something went wrong. Please email me directly at ${CONFIG.email}.`;
     } finally {
       btn.disabled = false;
     }

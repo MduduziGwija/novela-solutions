@@ -24,6 +24,15 @@ To receive submissions directly in your inbox instead:
 2. Copy its endpoint URL, e.g. `https://formspree.io/f/abcdwxyz`.
 3. Paste it into `formEndpoint` at the top of `assets/js/main.js`.
 
+## Adding your photo (from your phone)
+
+1. Open https://github.com/MduduziGwija/novela-solutions/tree/main/assets/img in your phone's browser (or the GitHub app).
+2. Tap **Add file → Upload files** and choose your photo.
+3. The file must be named **`portrait.jpg`** (`.jpeg`, `.png` and `.webp` also work). Rename it first if needed. iPhone HEIC photos won't display in browsers, so upload a JPG.
+4. Commit. The site switches from the illustrated portrait to your photo about a minute later.
+
+A portrait (taller than wide), plain background, good light and head-and-shoulders framing works best; the site shows it black-and-orange and reveals full colour on hover.
+
 ## Editing content
 
 - **Contact details** (email, phone, WhatsApp, GitHub) appear in each page's footer, the full-screen menu, and on `contact.html`. Search for `mduduzigwija@gmail.com` / `27670248700` to update them everywhere.
