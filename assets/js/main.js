@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Novela Solutions Africa — site behaviour
+   Novela Solutions Africa: site behaviour
    ========================================================================== */
 
 /*
@@ -353,9 +353,9 @@ const CATS = {
 
 // Real projects only. `context` says where each was built; `tags` list only the tools actually used.
 const PROJECTS = [
-  { title: 'Lease Register — Property Tracker', desc: 'An internal app built for a property management team, letting property officers track the status of leases held for the departments they serve.', cat: 'system', context: 'Internal business tool', tags: ['Power Apps', 'Power Automate', 'Microsoft Lists'], art: 'lease' },
+  { title: 'Lease Register: Property Tracker', desc: 'An internal app built for a property management team, letting property officers track the status of leases held for the departments they serve.', cat: 'system', context: 'Internal business tool', tags: ['Power Apps', 'Power Automate', 'Microsoft Lists'], art: 'lease' },
   { title: 'Leave Management App', desc: 'An app for submitting and tracking leave requests, backed by a SQL database on Supabase.', cat: 'system', context: 'Independent build', tags: ['Supabase', 'SQL'], art: 'leave' },
-  { title: 'Unified University Application', desc: 'One application platform for all universities — applicants capture their details once and apply to multiple institutions from a single place.', cat: 'web', context: 'Independent build', tags: [], art: 'uni' },
+  { title: 'Unified University Application', desc: 'One application platform for all universities. Applicants capture their details once and apply to multiple institutions from a single place.', cat: 'web', context: 'Independent build', tags: [], art: 'uni' },
   { title: 'Personal Portfolio Site', desc: 'A personal portfolio website, designed and hand-coded from scratch to showcase projects and skills.', cat: 'web', context: 'Independent build', tags: ['HTML', 'CSS', 'JavaScript'], art: 'folio' }
 ];
 
@@ -442,7 +442,7 @@ function showStatus(el, type, msg) {
         showStatus(status, 'ok', 'Thanks! Your message has been sent. I\'ll reply within 24 hours.');
         form.reset();
       } else {
-        showStatus(status, 'ok', `Your email app should now open with your message ready — just hit send. If nothing opens, email me at ${CONFIG.email}.`);
+        showStatus(status, 'ok', `Your email app should now open with your message ready. Just hit send. If nothing opens, email me at ${CONFIG.email}.`);
       }
     } catch {
       showStatus(status, 'err', `Sorry, something went wrong. Please email me directly at ${CONFIG.email}.`);
@@ -492,13 +492,13 @@ function showStatus(el, type, msg) {
 
   function labelFor(name) {
     const checked = form.querySelector(`input[name="${name}"]:checked`);
-    return checked ? checked.closest('.choice').querySelector('strong').textContent : '—';
+    return checked ? checked.closest('.choice').querySelector('strong').textContent : 'Not given';
   }
 
   function buildSummary() {
     const dl = document.getElementById('brief-summary');
     if (!dl) return;
-    const rows = [['Service', labelFor('Service')], ['Budget', labelFor('Budget')], ['Timeline', labelFor('Timeline')], ['Project', form.elements['Project name'].value || '—']];
+    const rows = [['Service', labelFor('Service')], ['Budget', labelFor('Budget')], ['Timeline', labelFor('Timeline')], ['Project', form.elements['Project name'].value || 'Not given']];
     dl.innerHTML = rows.map(([k]) => `<dt>${k}</dt><dd></dd>`).join('');
     dl.querySelectorAll('dd').forEach((dd, n) => { dd.textContent = rows[n][1]; });
   }
@@ -520,11 +520,11 @@ function showStatus(el, type, msg) {
     const btn = form.querySelector('button[type="submit"]');
     btn.disabled = true;
     try {
-      const mode = await sendEnquiry(`Project brief: ${d['Project name'] || d.Service} — ${d['First name']} ${d['Last name']}`, d);
+      const mode = await sendEnquiry(`Project brief: ${d['Project name'] || d.Service} (${d['First name']} ${d['Last name']})`, d);
       form.hidden = true; progress.hidden = true; success.hidden = false;
       success.querySelector('[data-msg]').textContent = mode === 'sent'
         ? 'I\'ve received your brief and will be in touch within 24 hours with a personalised proposal.'
-        : `Your email app should now be open with your brief ready to send — just hit send. If nothing opened, email me at ${CONFIG.email}.`;
+        : `Your email app should now be open with your brief ready to send. Just hit send. If nothing opened, email me at ${CONFIG.email}.`;
       success.focus();
     } catch {
       error.textContent = `Sorry, something went wrong. Please email me directly at ${CONFIG.email}.`;
