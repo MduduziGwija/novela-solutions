@@ -16,7 +16,7 @@ Shared styles are in `assets/css/styles.css` and shared behaviour in `assets/js/
 
 ## Receiving form submissions
 
-By default, both forms open the visitor's email app with the message pre-filled to `hello@novelasolutions.africa`.
+By default, both forms open the visitor's email app with the message pre-filled to `mduduzigwija@gmail.com`.
 
 To receive submissions directly in your inbox instead:
 
@@ -26,9 +26,9 @@ To receive submissions directly in your inbox instead:
 
 ## Editing content
 
-- **Contact details** (email, phone, WhatsApp) appear in each page's footer, the mobile menu, and on `contact.html`. Search for `+27000000000` / `hello@novelasolutions.africa` to update them everywhere.
-- **Social links** on `contact.html` (LinkedIn, X) currently point to `#`.
-- **Portfolio projects** are the `PROJECTS` array in `assets/js/main.js` (`art` is the short label drawn inside each project's artwork).
+- **Contact details** (email, phone, WhatsApp, GitHub) appear in each page's footer, the full-screen menu, and on `contact.html`. Search for `mduduzigwija@gmail.com` / `27670248700` to update them everywhere.
+- **Portfolio projects** are the `PROJECTS` array in `assets/js/main.js`. Keep them real: `context` says where it was built, `tags` lists only tools actually used, and `art` is the short label drawn inside the artwork.
+- **Service illustrations** are inline SVGs inside each service row in `index.html`.
 
 ## Design system
 

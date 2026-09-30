@@ -10,7 +10,7 @@
  * https://formspree.io (or similar) and paste its endpoint URL below.
  */
 const CONFIG = {
-  email: 'hello@novelasolutions.africa',
+  email: 'mduduzigwija@gmail.com',
   formEndpoint: '' // e.g. 'https://formspree.io/f/abcdwxyz'
 };
 
@@ -174,95 +174,156 @@ document.querySelectorAll('.svc-row').forEach(row => {
   requestAnimationFrame(loop);
 })();
 
-/* ---------- Case study artwork (flat geometric compositions) ---------- */
-const C = { O: '#ff4c33', Y: '#d4f542', B: '#94bcee', G: '#d9d9d9', V: '#122d8b', K: '#1d1a1a', W: '#ffffff' };
-const label = (x, y, s, fill, size = 20) =>
-  `<text x="${x}" y="${y}" fill="${fill}" font-family="Martian Mono, monospace" font-size="${size}" font-weight="400" text-anchor="middle" dominant-baseline="central" letter-spacing="1">${s}</text>`;
+/* ---------- Case study artwork ----------
+   Flat geometric scenes, one per project. Elements with `hv-*` classes
+   animate on hover (or when scrolled into view on touch screens). */
+const C = { O: '#ff4c33', Y: '#d4f542', B: '#94bcee', G: '#d9d9d9', K: '#1d1a1a', W: '#ffffff', P: '#f3f3ef' };
+const label = (x, y, s, fill, size = 20, anchor = 'middle') =>
+  `<text x="${x}" y="${y}" fill="${fill}" font-family="Martian Mono, monospace" font-size="${size}" text-anchor="${anchor}" dominant-baseline="central" letter-spacing="1">${s}</text>`;
+
+// Browser window whose page content scrolls on hover.
+function browser({ x, y, w, h, id, scroll, content }) {
+  const bar = 34;
+  return `<defs><clipPath id="${id}"><path d="M${x} ${y + bar}H${x + w}V${y + h - 16}a16 16 0 0 1-16 16H${x + 16}a16 16 0 0 1-16-16Z"/></clipPath></defs>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="16" fill="${C.W}"/>
+    <g clip-path="url(#${id})"><g class="hv-scroll" style="--scroll:${scroll}px">${content}</g></g>
+    <rect x="${x}" y="${y + bar}" width="${w}" height="1.5" fill="${C.G}"/>
+    <circle cx="${x + 22}" cy="${y + 17}" r="5" fill="${C.K}"/><circle cx="${x + 38}" cy="${y + 17}" r="5" fill="${C.G}"/><circle cx="${x + 54}" cy="${y + 17}" r="5" fill="${C.G}"/>
+    <rect x="${x + w / 2 - 70}" y="${y + 10}" width="140" height="14" rx="7" fill="${C.P}"/>`;
+}
+const cursor = (x, y) =>
+  `<g class="hv-cursor"><path transform="translate(${x} ${y})" d="M0 0V22L6 16.5L11 26L15 24.5L10 15H19Z" fill="${C.K}" stroke="${C.W}" stroke-width="1.6"/></g>`;
 
 const ART = {
-  web: (t, v) => {
-    const [bg, dot] = v % 2 ? [C.Y, C.O] : [C.O, C.Y];
-    return `<rect width="800" height="450" fill="${bg}"/>
-      <g class="s1"><rect x="90" y="70" width="470" height="320" rx="18" fill="${C.W}"/>
-        <circle cx="120" cy="98" r="6" fill="${C.K}"/><circle cx="140" cy="98" r="6" fill="${C.G}"/><circle cx="160" cy="98" r="6" fill="${C.G}"/>
-        <rect x="120" y="142" width="270" height="28" rx="14" fill="${C.K}"/><rect x="120" y="182" width="190" height="14" rx="7" fill="${C.G}"/>
-        <rect x="120" y="214" width="112" height="34" rx="17" fill="${C.K}"/>
-        <rect x="120" y="282" width="126" height="78" rx="12" fill="${C.G}"/><rect x="258" y="282" width="126" height="78" rx="12" fill="${C.G}"/><rect x="396" y="282" width="126" height="78" rx="12" fill="${C.G}"/></g>
-      <g class="s2"><circle cx="610" cy="296" r="116" fill="${dot}"/>${label(610, 296, t, C.K, 24)}</g>
-      <rect class="s3" x="630" y="72" width="76" height="76" rx="8" fill="${C.K}"/>`;
+  // Lease register: windows light up, lease statuses flip to active, a key slides in.
+  lease: () => {
+    const wins = [];
+    for (let r = 0; r < 5; r++) for (let c = 0; c < 3; c++)
+      wins.push(`<rect class="hv-win" style="--i:${(r * 3 + c) % 7}" x="${104 + c * 64}" y="${134 + r * 46}" width="44" height="30" rx="4" fill="${C.G}"/>`);
+    const rows = [0, 1, 2, 3].map(i => {
+      const y = 150 + i * 56;
+      return `<rect x="380" y="${y}" width="110" height="12" rx="6" fill="${C.G}"/><rect x="380" y="${y + 20}" width="70" height="8" rx="4" fill="${C.G}"/>
+        <rect class="hv-status" style="--i:${i}" x="520" y="${y - 2}" width="72" height="26" rx="13" fill="${i === 0 ? C.Y : C.O}"/>`;
+    }).join('');
+    return `<rect width="800" height="450" fill="${C.B}"/>
+      <rect x="0" y="398" width="800" height="52" fill="${C.K}"/>
+      <rect x="70" y="100" width="230" height="16" fill="${C.K}"/><rect x="80" y="112" width="210" height="288" fill="${C.K}"/>
+      ${wins.join('')}
+      <rect x="160" y="362" width="50" height="38" fill="${C.Y}"/>
+      <rect x="350" y="70" width="270" height="310" rx="16" fill="${C.W}"/>
+      ${label(380, 104, 'LEASE REGISTER', C.K, 15, 'start')}
+      <rect x="380" y="124" width="210" height="2" fill="${C.G}"/>
+      ${rows}
+      <g class="hv-key">
+        <circle cx="700" cy="300" r="30" fill="none" stroke="${C.K}" stroke-width="14"/>
+        <rect x="590" y="295" width="82" height="11" fill="${C.K}"/>
+        <rect x="598" y="305" width="11" height="16" fill="${C.K}"/><rect x="618" y="305" width="11" height="11" fill="${C.K}"/>
+      </g>`;
   },
-  system: (t, v) => {
-    const accent = v % 2 ? C.O : C.B;
-    const nodes = [[140, 110], [290, 110], [140, 260], [290, 260], [140, 380], [440, 380]];
-    return `<rect width="800" height="450" fill="${C.W}"/>
-      <g class="s1" stroke="${C.K}" stroke-width="2">
-        <path d="M140 110H290M140 110V380M290 110V260H140M290 260L560 225M140 380H440L560 225" fill="none"/>
-        ${nodes.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="30" fill="${C.G}" stroke="none"/>`).join('')}
-      </g>
-      <g class="s2"><circle cx="570" cy="225" r="126" fill="${accent}"/>${label(570, 225, t, C.K, 24)}</g>
-      <circle class="s3" cx="720" cy="80" r="34" fill="${C.K}"/>`;
+  // Leave app: days get booked one by one, then an approval stamp lands.
+  leave: () => {
+    const booked = { '1,1': 0, '1,2': 1, '1,3': 2, '1,4': 3, '2,1': 4, '2,2': 5 };
+    const cells = [];
+    for (let r = 0; r < 4; r++) for (let c = 0; c < 7; c++) {
+      const i = booked[`${r},${c}`];
+      cells.push(`<rect${i !== undefined ? ` class="hv-day" style="--i:${i}"` : ''} x="${124 + c * 54}" y="${150 + r * 56}" width="44" height="44" rx="8" fill="${C.P}"/>`);
+    }
+    return `<rect width="800" height="450" fill="${C.Y}"/>
+      <rect x="100" y="60" width="420" height="340" rx="18" fill="${C.W}"/>
+      <rect x="100" y="60" width="420" height="70" rx="18" fill="${C.K}"/><rect x="100" y="110" width="420" height="22" fill="${C.K}"/>
+      ${label(130, 96, 'LEAVE', C.W, 18, 'start')}
+      <circle cx="450" cy="96" r="7" fill="${C.O}"/><circle cx="474" cy="96" r="7" fill="${C.G}"/>
+      ${cells.join('')}
+      <g class="hv-stamp"><circle cx="490" cy="345" r="54" fill="${C.K}"/><path d="M464 345l18 18 34-36" fill="none" stroke="${C.W}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <circle class="hv-rays" cx="660" cy="150" r="86" fill="none" stroke="${C.O}" stroke-width="12" stroke-dasharray="10 16"/>
+      <circle cx="660" cy="150" r="58" fill="${C.O}"/>`;
   },
-  dashboard: (t, v) => {
-    const hs = v % 2 ? [120, 190, 150, 250, 210, 300, 260] : [160, 110, 230, 180, 280, 220, 320];
-    const fills = [C.G, C.Y, C.G, C.B, C.G, C.Y, C.W];
-    return `<rect width="800" height="450" fill="${C.K}"/>
-      <g class="s1">${hs.map((h, i) => `<rect x="${70 + i * 66}" y="${390 - h}" width="48" height="${h}" rx="6" fill="${fills[i]}"/>`).join('')}
-        <rect x="60" y="398" width="470" height="2" fill="${C.G}"/></g>
-      <g class="s2"><circle cx="640" cy="170" r="112" fill="${C.O}"/>${label(640, 170, t, C.K, 24)}</g>
-      <rect class="s3" x="640" y="330" width="64" height="64" rx="8" fill="${C.Y}"/>`;
+  // University application: the form scrolls, one application flows out to many universities.
+  uni: () => {
+    const fields = [0, 1, 2, 3, 4, 5].map(i => {
+      const y = 176 + i * 62;
+      return `<rect x="90" y="${y}" width="${[90, 120, 70, 110, 80, 130][i]}" height="9" rx="4.5" fill="${C.G}"/>
+        <rect x="90" y="${y + 17}" width="350" height="28" rx="14" fill="${C.P}" stroke="${C.K}" stroke-width="1.5"/>`;
+    }).join('');
+    const content = `<rect x="90" y="118" width="190" height="20" rx="4" fill="${C.K}"/><rect x="90" y="146" width="250" height="10" rx="5" fill="${C.G}"/>
+      ${fields}
+      <rect x="90" y="552" width="18" height="18" rx="4" fill="${C.K}"/><rect x="118" y="556" width="200" height="10" rx="5" fill="${C.G}"/>
+      <rect x="90" y="592" width="140" height="38" rx="19" fill="${C.K}"/>${label(160, 611, 'APPLY', C.W, 14)}`;
+    const targets = [[110, -40.2, 178, C.Y, 'UNI A'], [225, 0, 136, C.B, 'UNI B'], [340, 40.2, 178, C.W, 'UNI C']];
+    return `<rect width="800" height="450" fill="${C.O}"/>
+      ${targets.map(([cy]) => `<path d="M480 225L640 ${cy}" stroke="${C.K}" stroke-width="2" stroke-dasharray="4 6"/>`).join('')}
+      ${targets.map(([, a, len], i) => `<g transform="translate(480 225) rotate(${a})"><circle class="hv-slide" style="--len:${len}px;--i:${i}" r="7" fill="${C.K}"/></g>`).join('')}
+      ${targets.map(([cy, , , fill, t]) => `<circle cx="660" cy="${cy}" r="46" fill="${fill}"/>${label(660, cy, t, C.K, 14)}`).join('')}
+      ${browser({ x: 60, y: 60, w: 420, h: 330, id: 'clip-uni', scroll: -250, content })}
+      ${cursor(330, 300)}
+      <g class="hv-cap">
+        <path d="M410 62L470 36L530 62L470 88Z" fill="${C.K}"/><rect x="444" y="72" width="52" height="24" rx="4" fill="${C.K}"/>
+        <path d="M470 62L520 72V102" fill="none" stroke="${C.Y}" stroke-width="3"/><circle cx="520" cy="104" r="5" fill="${C.Y}"/>
+      </g>`;
   },
-  brand: (t) => `<rect width="800" height="450" fill="${C.B}"/>
-      <circle class="s1" cx="300" cy="235" r="150" fill="${C.O}"/>
-      <g class="s2"><circle cx="490" cy="205" r="108" fill="${C.Y}"/>${label(490, 205, t, C.K, 24)}</g>
-      <rect class="s3" x="620" y="300" width="84" height="84" rx="10" fill="${C.K}"/>
-      <circle cx="140" cy="90" r="30" fill="${C.W}"/>`
+  // Portfolio site: the page scrolls and the project cards fan out.
+  folio: () => {
+    const content = `<rect x="100" y="110" width="60" height="10" rx="5" fill="${C.K}"/>
+      <rect x="360" y="111" width="24" height="8" rx="4" fill="${C.G}"/><rect x="392" y="111" width="24" height="8" rx="4" fill="${C.G}"/><rect x="424" y="111" width="24" height="8" rx="4" fill="${C.G}"/>
+      <rect x="100" y="142" width="250" height="30" rx="4" fill="${C.K}"/><rect x="100" y="180" width="180" height="30" rx="4" fill="${C.K}"/>
+      <rect x="100" y="224" width="150" height="10" rx="5" fill="${C.G}"/><rect x="100" y="246" width="90" height="26" rx="13" fill="${C.O}"/>
+      <circle cx="420" cy="192" r="46" fill="${C.B}"/>
+      <rect x="100" y="304" width="120" height="14" rx="4" fill="${C.K}"/>
+      <rect x="100" y="330" width="180" height="96" rx="10" fill="${C.O}"/><rect x="290" y="330" width="180" height="96" rx="10" fill="${C.K}"/>
+      <rect x="100" y="438" width="180" height="96" rx="10" fill="${C.B}"/><rect x="290" y="438" width="180" height="96" rx="10" fill="${C.G}"/>
+      <rect x="70" y="556" width="430" height="70" fill="${C.K}"/>`;
+    const card = (cls, fill) => `<g class="${cls}"><rect x="575" y="140" width="150" height="200" rx="14" fill="${C.W}"/>
+      <rect x="587" y="152" width="126" height="100" rx="8" fill="${fill}"/><rect x="587" y="266" width="90" height="10" rx="5" fill="${C.K}"/><rect x="587" y="286" width="110" height="8" rx="4" fill="${C.G}"/></g>`;
+    return `<rect width="800" height="450" fill="${C.Y}"/>
+      ${card('hv-fan hv-fan1', C.K)}${card('hv-fan hv-fan2', C.B)}${card('hv-fan hv-fan3', C.O)}
+      ${browser({ x: 70, y: 60, w: 430, h: 330, id: 'clip-folio', scroll: -240, content })}
+      ${cursor(300, 260)}`;
+  }
 };
 
 const CATS = {
-  web: { label: 'Web design', accent: C.O },
-  system: { label: 'System', accent: C.B },
-  dashboard: { label: 'Dashboard', accent: C.Y },
-  brand: { label: 'Branding', accent: '#fc74dd' }
+  web: { label: 'Web', accent: C.O },
+  system: { label: 'System', accent: C.B }
 };
 
+// Real projects only. `context` says where each was built; `tags` list only the tools actually used.
 const PROJECTS = [
-  { title: 'Retail Pro — E-commerce Site', desc: 'Full online store for a Cape Town clothing brand, with product management, cart, and payments.', cat: 'web', tags: ['React', 'Stripe', 'SEO'], art: 'SHOP' },
-  { title: 'HR Management System', desc: 'Custom HR platform for a mid-sized company — leave management, payroll reports, and staff portal.', cat: 'system', tags: ['Node.js', 'PostgreSQL'], art: 'HR' },
-  { title: 'Sales Analytics Dashboard', desc: 'Real-time dashboard tracking 12 KPIs across regional branches with a live alert system.', cat: 'dashboard', tags: ['React', 'Chart.js'], art: '12 KPI' },
-  { title: 'Law Firm Website', desc: 'Clean, authoritative website for a Johannesburg law firm with blog, team bios, and case enquiry form.', cat: 'web', tags: ['WordPress', 'SEO'], art: 'LAW' },
-  { title: 'Inventory & POS System', desc: 'Point-of-sale and stock management system built for a multi-branch hardware store.', cat: 'system', tags: ['Python', 'Electron'], art: 'POS' },
-  { title: 'Brand Identity — TechStartup', desc: 'Logo, colour palette, typography guide, and brand assets for a Nairobi startup.', cat: 'brand', tags: ['Figma', 'Illustrator'], art: 'ID' },
-  { title: 'Logistics Tracking Dashboard', desc: 'Live map-based dashboard for a courier company to track drivers and deliveries in real time.', cat: 'dashboard', tags: ['Mapbox', 'Socket.io'], art: 'LIVE' },
-  { title: 'Restaurant Booking Site', desc: 'Reservation system with online table booking, menu showcase, and kitchen-side order panel.', cat: 'web', tags: ['Next.js', 'Supabase'], art: 'BOOK' },
-  { title: 'NGO Donor Portal', desc: 'Web platform for a non-profit to manage donors, track donations, and publish annual impact reports.', cat: 'system', tags: ['Vue.js', 'Firebase'], art: 'NGO' }
+  { title: 'Lease Register — Property Tracker', desc: 'An app that lets property officers track the status of leases held for the user departments they serve. Built and used in a real workplace.', cat: 'system', context: 'Workplace project', tags: ['Power Apps', 'Power Automate', 'Microsoft Lists'], art: 'lease' },
+  { title: 'Leave Management App', desc: 'An app for submitting and tracking leave requests, backed by a SQL database on Supabase.', cat: 'system', context: 'Independent build', tags: ['Supabase', 'SQL'], art: 'leave' },
+  { title: 'Unified University Application', desc: 'One application platform for all universities — applicants capture their details once and apply to multiple institutions from a single place.', cat: 'web', context: 'Independent build', tags: [], art: 'uni' },
+  { title: 'Personal Portfolio Site', desc: 'A personal portfolio website, designed and hand-coded from scratch to showcase projects and skills.', cat: 'web', context: 'Independent build', tags: ['HTML', 'CSS', 'JavaScript'], art: 'folio' }
 ];
 
-function caseCard(p, i, variant) {
+function caseCard(p, i) {
   const cat = CATS[p.cat];
   const wide = i % 3 === 0;
   const light = i % 3 !== 1;
   return `<article class="case reveal${wide ? ' case--wide' : ''}${light ? ' case--light' : ''}" style="--accent:${cat.accent}">
-    <div class="case-head"><span class="tag">${cat.label}</span><span class="mono">${p.tags.join(' / ')}</span></div>
-    <div class="case-art" aria-hidden="true"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice">${ART[p.cat](p.art, variant)}</svg></div>
+    <div class="case-head"><span class="tag">${cat.label}</span><span class="mono">${p.context}</span></div>
+    <div class="case-art" aria-hidden="true"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice">${ART[p.art]()}</svg></div>
     <div class="case-foot">
       <h3>${p.title}</h3>
-      <p>${p.desc}</p>
+      <p>${p.desc}${p.tags.length ? `<span class="mono case-tags">${p.tags.join(' / ')}</span>` : ''}</p>
       <a class="pill" href="talk.html?service=${p.cat}" aria-label="Start a project like ${p.title}">Build similar →</a>
     </div>
   </article>`;
 }
 
+// On touch screens (no hover), play each artwork while it is on screen.
+const liveObserver = !finePointer && 'IntersectionObserver' in window
+  ? new IntersectionObserver(entries => entries.forEach(e => e.target.classList.toggle('live', e.isIntersecting)), { threshold: 0.5 })
+  : null;
+
 (function cases() {
   const grid = document.querySelector('[data-cases]');
   if (!grid) return;
-  const featured = grid.dataset.cases === 'featured';
-  const variantOf = p => PROJECTS.filter(q => q.cat === p.cat).indexOf(p);
 
   function render(filter) {
-    let list = featured ? [PROJECTS[0], PROJECTS[2], PROJECTS[5]] : PROJECTS;
+    let list = PROJECTS;
     if (filter && filter !== 'all') list = list.filter(p => p.cat === filter);
-    grid.innerHTML = list.map((p, i) => caseCard(p, i, variantOf(p))).join('') || '<p class="empty-note">No projects in this category yet.</p>';
+    grid.innerHTML = list.map(caseCard).join('') || '<p class="empty-note">No projects in this category yet.</p>';
     observeReveals(grid);
+    if (liveObserver) grid.querySelectorAll('.case').forEach(el => liveObserver.observe(el));
   }
 
   document.querySelectorAll('[data-filter]').forEach(btn => {
