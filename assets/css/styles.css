@@ -155,7 +155,7 @@ h1,h2,h3{font-weight:400;color:var(--bone)}
 .menu-foot a:hover{text-decoration:underline;text-underline-offset:4px}
 
 /* ---------- Hero / wordmark ---------- */
-.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:space-between;padding-top:calc(var(--nav-h) + 28px);padding-bottom:20px}
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:space-between;padding-top:calc(var(--nav-h) + 12px);padding-bottom:20px}
 .hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}
 .hero-top .sub{max-width:440px}
 .hero-top .mono{text-align:right;line-height:1.7}

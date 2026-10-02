@@ -81,19 +81,22 @@ if (header) {
   const mark = document.querySelector('.wordmark');
   if (!mark) return;
   const letters = [...mark.querySelectorAll('span')];
+  const stretch = !reduceMotion && finePointer;
 
   function fit() {
     mark.style.fontSize = '100px';
     const natural = letters.reduce((w, l) => w + l.getBoundingClientRect().width, 0);
     const avail = mark.clientWidth;
     mark.style.fontSize = `${Math.floor((100 * avail / natural) * 0.985)}px`;
+    // Letters stretch up to 1.2x from their baseline on hover; keep that headroom clear of the intro text.
+    if (stretch) mark.style.paddingTop = `${Math.ceil(parseFloat(mark.style.fontSize) * 0.2 + 24)}px`;
   }
   fit();
   document.fonts?.ready.then(fit);
   let rt;
   window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(fit, 100); });
 
-  if (reduceMotion || !finePointer) return;
+  if (!stretch) return;
   const hero = mark.closest('.hero') || mark;
   let raf = null, px = 0;
   hero.addEventListener('pointermove', e => {
