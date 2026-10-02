@@ -82,14 +82,69 @@ if (header) {
   if (!mark) return;
   const letters = [...mark.querySelectorAll('span')];
   const stretch = !reduceMotion && finePointer;
+  const hero = mark.closest('.hero') || mark;
+  const top = hero.querySelector('.hero-top');
+  const intro = top?.querySelector('.sub');
+  const side = intro?.nextElementSibling;
+  const GROW = 0.2, GAP = 24;
+
+  // Intro text flows out of the way of rising letters: it widens onto fewer lines and each word glides to its new spot.
+  let steps = [], step = 0, rise = 0;
+  if (stretch && intro) {
+    const words = intro.textContent.trim().split(/\s+/);
+    intro.textContent = '';
+    words.forEach((w, i) => {
+      const span = document.createElement('span');
+      span.className = 'flow-word';
+      span.textContent = w;
+      intro.append(span, i < words.length - 1 ? ' ' : '');
+    });
+  }
+  const flowWords = intro ? [...intro.querySelectorAll('.flow-word')] : [];
+
+  function measureFlow() {
+    steps = [];
+    step = 0;
+    if (!flowWords.length) return;
+    flowWords.forEach(w => w.getAnimations().forEach(a => a.cancel()));
+    intro.style.maxWidth = '';
+    const base = parseFloat(getComputedStyle(intro).maxWidth) || intro.offsetWidth;
+    const row = getComputedStyle(top).flexDirection === 'row';
+    const max = row ? top.clientWidth - (side ? side.offsetWidth : 0) - 48 : base;
+    for (let w = base; ; w += 80) {
+      const width = Math.min(w, max);
+      intro.style.maxWidth = `${width}px`;
+      const h = intro.offsetHeight;
+      if (!steps.length || h < steps[steps.length - 1].h) steps.push({ w: width, h });
+      if (width >= max) break;
+    }
+    intro.style.maxWidth = `${steps[0].w}px`;
+  }
 
   function fit() {
     mark.style.fontSize = '100px';
     const natural = letters.reduce((w, l) => w + l.getBoundingClientRect().width, 0);
     const avail = mark.clientWidth;
-    mark.style.fontSize = `${Math.floor((100 * avail / natural) * 0.985)}px`;
-    // Letters stretch up to 1.2x from their baseline on hover; keep that headroom clear of the intro text.
-    if (stretch) mark.style.paddingTop = `${Math.ceil(parseFloat(mark.style.fontSize) * 0.2 + 24)}px`;
+    const size = Math.floor((100 * avail / natural) * 0.985);
+    mark.style.fontSize = `${size}px`;
+    if (!stretch) return;
+    // Anton's caps overshoot the tight line box, so measure ink height (baseline up to cap top) from the font itself.
+    const cs = getComputedStyle(mark);
+    const ctx = document.createElement('canvas').getContext('2d');
+    ctx.font = `${cs.fontWeight} ${size}px ${cs.fontFamily}`;
+    const m = ctx.measureText(mark.textContent);
+    const lineH = letters[0].offsetHeight;
+    const half = (lineH - m.fontBoundingBoxAscent - m.fontBoundingBoxDescent) / 2;
+    rise = lineH - half - m.fontBoundingBoxAscent + m.actualBoundingBoxAscent;
+    measureFlow();
+    // Headroom for the hover stretch, minus what the intro can give back by flowing onto fewer lines.
+    // The side note doesn't move, so it caps how much the intro's lift can count.
+    let lift = 0;
+    if (steps.length) {
+      lift = steps[0].h - steps[steps.length - 1].h;
+      if (side && getComputedStyle(top).flexDirection === 'row') lift = Math.min(lift, intro.offsetHeight - side.offsetHeight);
+    }
+    mark.style.paddingTop = `${Math.ceil(Math.max(GAP, rise * (1 + GROW) - lineH + GAP - lift))}px`;
   }
   fit();
   document.fonts?.ready.then(fit);
@@ -97,23 +152,57 @@ if (header) {
   window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(fit, 100); });
 
   if (!stretch) return;
-  const hero = mark.closest('.hero') || mark;
+
+  // Pick the narrowest width whose text clears the letters' target tops.
+  function flow(tops) {
+    if (steps.length < 2) return;
+    const ir = intro.getBoundingClientRect();
+    const clear = i => {
+      const right = ir.left + steps[i].w;
+      const bottom = ir.top + steps[i].h + GAP;
+      return tops.every(t => t.right < ir.left || t.left > right || t.top >= bottom + (i < step ? 12 : 0));
+    };
+    let next = steps.findIndex((_, i) => clear(i));
+    if (next < 0) next = steps.length - 1;
+    if (next !== step) reflow(next);
+  }
+
+  function reflow(next) {
+    step = next;
+    const first = flowWords.map(w => w.getBoundingClientRect());
+    flowWords.forEach(w => w.getAnimations().forEach(a => a.cancel()));
+    intro.style.maxWidth = `${steps[next].w}px`;
+    flowWords.forEach((w, i) => {
+      const r = w.getBoundingClientRect();
+      const dx = first[i].left - r.left, dy = first[i].top - r.top;
+      if (!dx && !dy) return;
+      w.animate([
+        { transform: `translate(${dx}px, ${dy}px)` },
+        { opacity: 0.35, filter: 'blur(1.5px)', offset: 0.45 },
+        { transform: 'none' }
+      ], { duration: 750, delay: i * 12, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
+    });
+  }
+
+  function stretchTo(px) {
+    const reach = mark.clientWidth * 0.32;
+    const tops = letters.map(l => {
+      const r = l.getBoundingClientRect();
+      const s = px == null ? 1 : 1 + GROW * Math.max(0, 1 - Math.abs(px - (r.left + r.width / 2)) / reach);
+      l.style.transform = s === 1 ? '' : `scaleY(${s.toFixed(3)})`;
+      // scaleY grows from the bottom edge, which stays put
+      return { left: r.left, right: r.right, top: r.bottom - rise * s };
+    });
+    flow(tops);
+  }
+
   let raf = null, px = 0;
   hero.addEventListener('pointermove', e => {
     px = e.clientX;
     if (raf) return;
-    raf = requestAnimationFrame(() => {
-      raf = null;
-      const reach = mark.clientWidth * 0.32;
-      letters.forEach(l => {
-        const r = l.getBoundingClientRect();
-        const d = Math.abs(px - (r.left + r.width / 2));
-        const s = 1 + 0.2 * Math.max(0, 1 - d / reach);
-        l.style.transform = `scaleY(${s.toFixed(3)})`;
-      });
-    });
+    raf = requestAnimationFrame(() => { raf = null; stretchTo(px); });
   });
-  hero.addEventListener('pointerleave', () => letters.forEach(l => { l.style.transform = ''; }));
+  hero.addEventListener('pointerleave', () => { cancelAnimationFrame(raf); raf = null; stretchTo(null); });
 })();
 
 /* ---------- About portrait: orbit photo, tilt/parallax, typing code card ---------- */
