@@ -32,6 +32,7 @@ document.addEventListener('click', e => {
   else if (href.startsWith('mailto:')) track('Email click', { where });
   else if (href.startsWith('tel:')) track('Phone click', { where });
   else if (href.includes('github.com')) track('GitHub click', { where });
+  else if (href.includes('/demo/')) track('Demo click', { where, demo: href.includes('ImbizoConnect') ? 'imbizoconnect' : 'leave' });
   else if (href.startsWith('talk.html')) track('Start project click', { where, service: new URL(href, location.href).searchParams.get('service') || 'none' });
 });
 
@@ -463,8 +464,8 @@ const CATS = {
 // Real projects only. `context` says where each was built; `tags` list only the tools actually used.
 const PROJECTS = [
   { title: 'Lease Register: Property Tracker', desc: 'An internal app built for a property management team, letting property officers track the status of leases held for the departments they serve.', cat: 'system', context: 'Internal business tool', tags: ['Power Apps', 'Power Automate', 'Microsoft Lists'], art: 'lease' },
-  { title: 'Leave Management App', desc: 'An app for submitting and tracking leave requests, backed by a SQL database on Supabase.', cat: 'system', context: 'Independent build', tags: ['Supabase', 'SQL'], art: 'leave' },
-  { title: 'Unified University Application', desc: 'One application platform for all universities. Applicants capture their details once and apply to multiple institutions from a single place.', cat: 'web', context: 'Independent build', tags: [], art: 'uni' },
+  { title: 'Leave Management App', desc: 'An app for submitting and tracking leave requests, backed by a SQL database on Supabase.', cat: 'system', context: 'Independent build', tags: ['Supabase', 'SQL'], art: 'leave', demo: 'https://mduduzigwija.github.io/Leave-Management-App/demo/' },
+  { title: 'ImbizoConnect', desc: 'A concept platform for applying to several South African universities at once. Applicants capture their details once and apply to multiple institutions from a single place.', cat: 'web', context: 'Independent build', tags: ['JavaScript', 'Supabase', 'PostgreSQL'], art: 'uni', demo: 'https://mduduzigwija.github.io/ImbizoConnect/demo/' },
   { title: 'Personal Portfolio Site', desc: 'A personal portfolio website, designed and hand-coded from scratch to showcase projects and skills.', cat: 'web', context: 'Independent build', tags: ['HTML', 'CSS', 'JavaScript'], art: 'folio' }
 ];
 
@@ -478,7 +479,10 @@ function caseCard(p, i) {
     <div class="case-foot">
       <h3>${p.title}</h3>
       <p>${p.desc}${p.tags.length ? `<span class="mono case-tags">${p.tags.join(' / ')}</span>` : ''}</p>
-      <a class="pill" href="talk.html?service=${p.cat}" aria-label="Start a project like ${p.title}">Build similar →</a>
+      <div class="case-actions">
+        ${p.demo ? `<a class="pill pill--solid" href="${p.demo}" target="_blank" rel="noopener" aria-label="Open the live demo of ${p.title}">Live demo ↗</a>` : ''}
+        <a class="pill" href="talk.html?service=${p.cat}" aria-label="Start a project like ${p.title}">Build similar →</a>
+      </div>
     </div>
   </article>`;
 }
