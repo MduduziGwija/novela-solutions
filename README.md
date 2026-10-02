@@ -12,7 +12,7 @@ Static marketing site for Novela Solutions Africa. No build step: plain HTML, CS
 | `talk.html` | 4-step project brief form (supports `?service=web\|system\|dashboard\|brand\|mobile\|other`) |
 | `404.html` | Not-found page (GitHub Pages serves it automatically) |
 
-Shared styles are in `assets/css/styles.css` and shared behaviour in `assets/js/main.js`.
+Shared styles are in `assets/css/styles.css` and shared behaviour in `assets/js/main.js`. Every page loads them with a `?v=` version tag: after changing either file, update that tag in all pages (search for `?v=`) so browsers fetch the new copy instead of a cached one.
 
 ## Receiving form submissions
 
