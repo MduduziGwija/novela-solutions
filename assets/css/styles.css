@@ -312,6 +312,7 @@ a.card:hover{transform:translateY(-4px)}
   background:var(--charcoal);color:var(--bone);overflow:hidden;
 }
 .case--light{background:var(--bone);color:var(--void)}
+.case--light h3{color:var(--void)}
 .case--wide{grid-column:1/-1}
 .case::before{content:'';position:absolute;left:0;top:24px;bottom:24px;width:4px;background:var(--accent,var(--magenta))}
 .case-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-left:8px}
