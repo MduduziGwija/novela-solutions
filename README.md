@@ -38,7 +38,7 @@ A portrait (taller than wide), plain background, good light and head-and-shoulde
 ## Editing content
 
 - **Contact details** (email, phone, WhatsApp, GitHub) appear in each page's footer, the full-screen menu, and on `contact.html`. Search for `mduduzigwija@gmail.com` / `27670248700` to update them everywhere.
-- **Portfolio projects** are the `PROJECTS` array in `assets/js/main.js`. Keep them real: `context` says where it was built, `tags` lists only tools actually used, and `art` is the short label drawn inside the artwork. Add `demo` with a URL to show a **Live demo** button on the card.
+- **Portfolio projects** are the `PROJECTS` array in `assets/js/main.js`. Keep them real: `context` says where it was built, `tags` lists only tools actually used, and `art` is the short label drawn inside the artwork. Add `demo` with a URL to show a **Live demo** button on the card (`demoLabel` changes the wording, e.g. "Visit site").
 - **Service illustrations** are inline SVGs inside each service row in `index.html`.
 
 ## Design system
