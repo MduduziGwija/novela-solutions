@@ -351,6 +351,9 @@ a.card:hover{transform:translateY(-4px)}
 .case-foot p{font-size:16px;opacity:.75;grid-column:1;max-width:620px}
 .case-tags{display:block;margin-top:14px;opacity:.85}
 .case-actions{grid-row:1/3;grid-column:2;align-self:end;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+/* Half-width cards: buttons go under the text so the description keeps the full width */
+.case:not(.case--wide) .case-foot{grid-template-columns:1fr}
+.case:not(.case--wide) .case-actions{grid-row:auto;grid-column:1;justify-content:flex-start;margin-top:8px}
 .pill--solid{background:var(--bone);border-color:var(--bone);color:var(--void)}
 .pill--solid:hover{background:transparent;color:var(--bone)}
 .case--light .pill.pill--solid{background:var(--void);color:var(--bone)}
