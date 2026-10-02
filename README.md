@@ -24,7 +24,7 @@ If `formEndpoint` is emptied, the forms fall back to opening the visitor's email
 
 The live site counts visits anonymously with [Umami](https://umami.is) (no cookies, no personal data), using the same Umami website as ImbizoConnect and the Leave Management demo. Visits appear in that dashboard under the `/novela-solutions/` paths. `data-domains="mduduzigwija.github.io"` means local copies are never counted.
 
-Custom events (in `assets/js/main.js`, `track()`): `Brief sent`, `Contact form sent` (service/budget/timeline only), `Start project click`, `WhatsApp click`, `Email click`, `Phone click`, `GitHub click`, `Portfolio filter`. Never add names, emails, phone numbers or message text to events.
+Custom events (in `assets/js/main.js`, `track()`): `Brief sent`, `Contact form sent` (service/budget/timeline only), `Start project click`, `WhatsApp click`, `Email click`, `Phone click`, `GitHub click`, `Demo click`, `Portfolio filter`. Never add names, emails, phone numbers or message text to events.
 
 ## Adding your photo (from your phone)
 
@@ -38,7 +38,7 @@ A portrait (taller than wide), plain background, good light and head-and-shoulde
 ## Editing content
 
 - **Contact details** (email, phone, WhatsApp, GitHub) appear in each page's footer, the full-screen menu, and on `contact.html`. Search for `mduduzigwija@gmail.com` / `27670248700` to update them everywhere.
-- **Portfolio projects** are the `PROJECTS` array in `assets/js/main.js`. Keep them real: `context` says where it was built, `tags` lists only tools actually used, and `art` is the short label drawn inside the artwork.
+- **Portfolio projects** are the `PROJECTS` array in `assets/js/main.js`. Keep them real: `context` says where it was built, `tags` lists only tools actually used, and `art` is the short label drawn inside the artwork. Add `demo` with a URL to show a **Live demo** button on the card.
 - **Service illustrations** are inline SVGs inside each service row in `index.html`.
 
 ## Design system
