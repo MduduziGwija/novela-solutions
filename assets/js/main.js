@@ -489,7 +489,7 @@ const CATS = {
 // Real projects only. `context` says where each was built; `tags` list only the tools actually used.
 const PROJECTS = [
   { title: 'Mother City Pools', desc: 'A fast, secure website for a Cape Town swimming pool company, replacing their old WordPress site. Service pages, a quote form that emails each request to the owner, and a simple admin so the owner can update the content.', cat: 'web', context: 'Client website', tags: ['HTML', 'CSS', 'JavaScript', 'PHP'], art: 'pool', demo: 'https://www.mothercitypools.co.za/', demoLabel: 'Visit site' },
-  { title: 'Lease Register: Property Tracker', desc: 'An internal app built for a property management team, letting property officers track the status of leases held for the departments they serve.', cat: 'system', context: 'Internal business tool', tags: ['Power Apps', 'Power Automate', 'Microsoft Lists'], art: 'lease' },
+  { title: 'Lease Register: Property Tracker', desc: 'An internal app built for a property management team, letting property officers track the status of leases held for the departments they serve.', cat: 'system', context: 'Internal business tool', tags: ['Power Apps', 'Power Automate', 'Microsoft Lists'], art: 'lease', privateNote: "This app is private to my workplace, so I can't share a live link." },
   { title: 'Leave Management App', desc: 'An app for submitting and tracking leave requests, backed by a SQL database on Supabase.', cat: 'system', context: 'Independent build', tags: ['Supabase', 'SQL'], art: 'leave', demo: 'https://mduduzigwija.github.io/Leave-Management-App/demo/' },
   { title: 'ImbizoConnect', desc: 'A concept platform for applying to several South African universities at once. Applicants capture their details once and apply to multiple institutions from a single place.', cat: 'web', context: 'Independent build', tags: ['JavaScript', 'Supabase', 'PostgreSQL'], art: 'uni', demo: 'https://mduduzigwija.github.io/ImbizoConnect/demo/' },
   { title: 'Personal Portfolio Site', desc: 'A personal portfolio website, designed and hand-coded from scratch to showcase projects and skills.', cat: 'web', context: 'Independent build', tags: ['HTML', 'CSS', 'JavaScript'], art: 'folio', demo: 'https://mduduzigwija.github.io/Mduduzi-Gwija-Profile-Site-1/', demoLabel: 'Visit site' }
@@ -508,6 +508,7 @@ function caseCard(p, i, list) {
       <p>${p.desc}${p.tags.length ? `<span class="mono case-tags">${p.tags.join(' / ')}</span>` : ''}</p>
       <div class="case-actions">
         ${p.demo ? `<a class="pill pill--solid" href="${p.demo}" target="_blank" rel="noopener" data-demo="${p.art}" aria-label="Open ${p.title} live">${p.demoLabel || 'Live demo'} ↗</a>` : ''}
+        ${p.privateNote ? `<span class="pill pill--private" title="${p.privateNote}" aria-label="${p.privateNote}"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Private to my work</span>` : ''}
         <a class="pill" href="talk.html?service=${p.cat}" aria-label="Start a project like ${p.title}">Build similar →</a>
       </div>
     </div>
