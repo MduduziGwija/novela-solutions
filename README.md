@@ -39,7 +39,7 @@ A portrait (taller than wide), plain background, good light and head-and-shoulde
 
 - **Contact details** (email, phone, WhatsApp, GitHub) appear in each page's footer, the full-screen menu, and on `contact.html`. Search for `mduduzigwija@gmail.com` / `27670248700` to update them everywhere.
 - **Portfolio projects** are the `PROJECTS` array in `assets/js/main.js`. Keep them real: `context` says where it was built, `tags` lists only tools actually used, and `art` is the short label drawn inside the artwork. Add `demo` with a URL to show a **Live demo** button on the card (`demoLabel` changes the wording, e.g. "Visit site").
-- **Landing-page previews**: `preview: { img: 'name' }` on a project slides a browser window with `assets/img/previews/name.webp` over the artwork on hover (on phones, once the card is on screen) and scrolls it top to bottom. Use a full-page screenshot taken at 1280px wide, resized to 960px wide and capped at about 2400px tall, saved as WebP (around 100 to 150 KB). Add `dur` (seconds) to change the scroll speed. Leave `preview` off for private work.
+- **Landing-page previews**: `preview: { img: 'name' }` on a project slides a browser window with `assets/img/previews/name.webp` up to cover the artwork on hover (on phones, once the card is on screen) and scrolls it top to bottom. Use a full-page screenshot taken at 1280px wide, resized to 960px wide and capped at about 2400px tall, saved as WebP (around 100 to 150 KB). Add `dur` (seconds) to change the scroll speed. Leave `preview` off for private work.
 - **Private projects**: `privateNote` shows a "Private to my work" label instead of a link, with the note as hover text.
 - **Service illustrations** are inline SVGs inside each service row in `index.html`.
 
