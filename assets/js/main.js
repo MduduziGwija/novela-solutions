@@ -500,6 +500,7 @@ const PROJECTS = [
 const preview = ({ img, dur = 16 }, url) => `<div class="case-preview" style="--pv-dur:${dur}s">
     <div class="pv-bar"><i></i><i></i><i></i><span>${url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</span></div>
     <div class="pv-view"><img src="assets/img/previews/${img}.webp" alt="" loading="lazy" decoding="async"></div>
+    <b class="pv-tag">Preview</b>
   </div>`;
 
 function caseCard(p, i, list) {

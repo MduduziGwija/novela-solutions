@@ -325,14 +325,17 @@ a.card:hover{transform:translateY(-4px)}
 .case--wide .case-art{aspect-ratio:16/7}
 .case-art svg{width:100%;height:100%}
 .case-art{position:relative;isolation:isolate}
-/* Landing-page preview: a browser window slides up to fill the art box, then the screenshot scrolls. */
-.case-preview{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;background:#fff;transform:translateY(105%);transition:transform .6s var(--ease)}
+/* Landing-page preview: a browser window in an ember frame slides up to fill the art box, then the
+   screenshot scrolls. The frame and "Preview" tag mark it as a glimpse, not part of this site's UI. */
+.case-preview{--pv-frame:5px;position:absolute;inset:0;display:flex;flex-direction:column;padding:var(--pv-frame);border-radius:var(--r-card-sm);background:var(--ember);transform:translateY(105%);transition:transform .6s var(--ease)}
 .case:is(:hover,.live) .case-preview{transform:none;transition:transform .8s var(--ease) .5s}
-.pv-bar{flex-shrink:0;position:relative;display:flex;align-items:center;gap:6px;height:26px;padding:0 12px;background:#f3f3ef;border-bottom:1px solid #d9d9d9}
+.pv-bar{flex-shrink:0;position:relative;display:flex;align-items:center;gap:6px;height:26px;padding:0 12px;border-radius:calc(var(--r-card-sm) - var(--pv-frame)) calc(var(--r-card-sm) - var(--pv-frame)) 0 0;background:#f3f3ef;border-bottom:1px solid #d9d9d9}
 .pv-bar i{width:8px;height:8px;border-radius:50%;background:#d9d9d9}
 .pv-bar i:first-child{background:var(--ember)}
 .pv-bar span{position:absolute;left:50%;transform:translateX(-50%);max-width:calc(100% - 100px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 12px;border-radius:999px;background:#fff;color:#555;font-family:var(--mono);font-size:10px;letter-spacing:.04em}
-.pv-view{flex:1;min-height:0;overflow:hidden;background:#fff}
+.pv-view{flex:1;min-height:0;overflow:hidden;background:#fff;border-radius:0 0 calc(var(--r-card-sm) - var(--pv-frame)) calc(var(--r-card-sm) - var(--pv-frame))}
+.pv-tag{position:absolute;left:16px;bottom:16px;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--ember);color:#fff;font-family:var(--mono);font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none}
+.pv-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:#fff}
 .pv-view img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 0}
 .case:is(:hover,.live) .pv-view img{animation:pvscroll var(--pv-dur,16s) ease-in-out 1.6s infinite}
 /* Case artwork: animates on hover, or while on screen (.live) on touch devices */
@@ -550,6 +553,7 @@ select.input{appearance:none;cursor:pointer;background-image:url("data:image/svg
   .card::before{top:32px;bottom:32px}
   .case{padding:16px}
   .case-art,.case--wide .case-art{aspect-ratio:16/10}
+  .pv-tag{left:10px;bottom:10px;padding:4px 9px;font-size:9px}
   .field-row,.choices--2{grid-template-columns:1fr}
   .choices--3{grid-template-columns:1fr 1fr}
   .footer-grid{grid-template-columns:1fr}
