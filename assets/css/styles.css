@@ -362,6 +362,8 @@ a.card:hover{transform:translateY(-4px)}
 .case--light .pill.pill--solid:hover{background:transparent;color:var(--void)}
 .case--light .pill{border-color:var(--void);color:var(--void)}
 .case--light .pill:hover{background:var(--void);color:var(--bone)}
+/* Shown instead of a live link for work that can't be shared publicly. */
+.case .pill--private,.case .pill--private:hover{border-style:dashed;background:transparent;color:inherit;cursor:help;opacity:.75}
 
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px}
 .filters .pill[aria-pressed="true"]{background:var(--magenta);border-color:var(--magenta);color:var(--charcoal)}
