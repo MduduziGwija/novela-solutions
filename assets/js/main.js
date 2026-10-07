@@ -487,13 +487,20 @@ const CATS = {
 };
 
 // Real projects only. `context` says where each was built; `tags` list only the tools actually used.
+// `preview` is a landing-page screenshot in assets/img/previews/ that slides over the art on hover
+// (or once the card is on screen on touch devices); `dur` is its scroll time in seconds.
 const PROJECTS = [
-  { title: 'Mother City Pools', desc: 'A fast, secure website for a Cape Town swimming pool company, replacing their old WordPress site. Service pages, a quote form that emails each request to the owner, and a simple admin so the owner can update the content.', cat: 'web', context: 'Client website', tags: ['HTML', 'CSS', 'JavaScript', 'PHP'], art: 'pool', demo: 'https://www.mothercitypools.co.za/', demoLabel: 'Visit site' },
+  { title: 'Mother City Pools', desc: 'A fast, secure website for a Cape Town swimming pool company, replacing their old WordPress site. Service pages, a quote form that emails each request to the owner, and a simple admin so the owner can update the content.', cat: 'web', context: 'Client website', tags: ['HTML', 'CSS', 'JavaScript', 'PHP'], art: 'pool', preview: { img: 'pool' }, demo: 'https://www.mothercitypools.co.za/', demoLabel: 'Visit site' },
   { title: 'Lease Register: Property Tracker', desc: 'An internal app built for a property management team, letting property officers track the status of leases held for the departments they serve.', cat: 'system', context: 'Internal business tool', tags: ['Power Apps', 'Power Automate', 'Microsoft Lists'], art: 'lease', privateNote: "This app is private to my workplace, so I can't share a live link." },
-  { title: 'Leave Management App', desc: 'An app for submitting and tracking leave requests, backed by a SQL database on Supabase.', cat: 'system', context: 'Independent build', tags: ['Supabase', 'SQL'], art: 'leave', demo: 'https://mduduzigwija.github.io/Leave-Management-App/demo/' },
-  { title: 'ImbizoConnect', desc: 'A concept platform for applying to several South African universities at once. Applicants capture their details once and apply to multiple institutions from a single place.', cat: 'web', context: 'Independent build', tags: ['JavaScript', 'Supabase', 'PostgreSQL'], art: 'uni', demo: 'https://mduduzigwija.github.io/ImbizoConnect/demo/' },
-  { title: 'Personal Portfolio Site', desc: 'A personal portfolio website, designed and hand-coded from scratch to showcase projects and skills.', cat: 'web', context: 'Independent build', tags: ['HTML', 'CSS', 'JavaScript'], art: 'folio', demo: 'https://mduduzigwija.github.io/Mduduzi-Gwija-Profile-Site-1/', demoLabel: 'Visit site' }
+  { title: 'Leave Management App', desc: 'An app for submitting and tracking leave requests, backed by a SQL database on Supabase.', cat: 'system', context: 'Independent build', tags: ['Supabase', 'SQL'], art: 'leave', preview: { img: 'leave', dur: 9 }, demo: 'https://mduduzigwija.github.io/Leave-Management-App/demo/' },
+  { title: 'ImbizoConnect', desc: 'A concept platform for applying to several South African universities at once. Applicants capture their details once and apply to multiple institutions from a single place.', cat: 'web', context: 'Independent build', tags: ['JavaScript', 'Supabase', 'PostgreSQL'], art: 'uni', preview: { img: 'uni' }, demo: 'https://mduduzigwija.github.io/ImbizoConnect/demo/' },
+  { title: 'Personal Portfolio Site', desc: 'A personal portfolio website, designed and hand-coded from scratch to showcase projects and skills.', cat: 'web', context: 'Independent build', tags: ['HTML', 'CSS', 'JavaScript'], art: 'folio', preview: { img: 'folio' }, demo: 'https://mduduzigwija.github.io/Mduduzi-Gwija-Profile-Site-1/', demoLabel: 'Visit site' }
 ];
+
+const preview = ({ img, dur = 16 }, url) => `<div class="case-preview" style="--pv-dur:${dur}s">
+    <div class="pv-bar"><i></i><i></i><i></i><span>${url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</span></div>
+    <div class="pv-view"><img src="assets/img/previews/${img}.webp" alt="" loading="lazy" decoding="async"></div>
+  </div>`;
 
 function caseCard(p, i, list) {
   const cat = CATS[p.cat];
@@ -502,7 +509,7 @@ function caseCard(p, i, list) {
   const light = i % 3 !== 1;
   return `<article class="case reveal${wide ? ' case--wide' : ''}${light ? ' case--light' : ''}" style="--accent:${cat.accent}">
     <div class="case-head"><span class="tag">${cat.label}</span><span class="mono">${p.context}</span></div>
-    <div class="case-art" aria-hidden="true"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice">${ART[p.art]()}</svg></div>
+    <div class="case-art" aria-hidden="true"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice">${ART[p.art]()}</svg>${p.preview ? preview(p.preview, p.demo) : ''}</div>
     <div class="case-foot">
       <h3>${p.title}</h3>
       <p>${p.desc}${p.tags.length ? `<span class="mono case-tags">${p.tags.join(' / ')}</span>` : ''}</p>
