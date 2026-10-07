@@ -43,6 +43,12 @@ A portrait (taller than wide), plain background, good light and head-and-shoulde
 - **Private projects**: `privateNote` shows a "Private to my work" label instead of a link, with the note as hover text.
 - **Service illustrations** are inline SVGs inside each service row in `index.html`.
 
+## Link previews (WhatsApp, Facebook, LinkedIn, X)
+
+When someone shares a link to the site, apps show a preview card built from the **Open Graph** tags (`og:*`) in each page's `<head>`: title, description and the image `assets/img/og-image.jpg` (1200 x 630, the NOVELA logo). `og:image` and `og:url` must be full `https://` addresses. If the address of the site changes, update them on every page (search for `mduduzigwija.github.io/novela-solutions`).
+
+Apps cache previews. After changing the image, rename the file (e.g. `og-image-2.jpg`) or check it with the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) to refresh it (WhatsApp uses the same tags). `assets/img/apple-touch-icon.png` is the icon used when the site is saved to an iPhone home screen.
+
 ## Design system
 
 Black canvas, one oversized wordmark per page, monospace UI labels, pill-shaped controls, and a single magenta primary action. Fonts (Google Fonts): Anton (wordmark), Inter Tight (text), Martian Mono (UI labels). All colour tokens are at the top of `assets/css/styles.css`.
