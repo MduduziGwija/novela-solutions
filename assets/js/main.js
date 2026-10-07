@@ -436,6 +436,31 @@ const ART = {
         <path d="M470 62L520 72V102" fill="none" stroke="${C.Y}" stroke-width="3"/><circle cx="520" cy="104" r="5" fill="${C.Y}"/>
       </g>`;
   },
+  // Pool company site: the page scrolls, the water ripples and the sun turns.
+  pool: () => {
+    const content = `<rect x="70" y="95" width="430" height="44" fill="${C.K}"/><rect x="92" y="111" width="70" height="12" rx="6" fill="${C.W}"/>
+      <rect x="400" y="107" width="80" height="20" rx="10" fill="${C.O}"/>
+      <rect x="70" y="139" width="430" height="150" fill="${C.B}"/>
+      <path d="M70 250q27-14 54 0t54 0 54 0 54 0 54 0 54 0 54 0 54 0V289H70Z" fill="${C.W}" opacity=".45"/>
+      <rect x="100" y="170" width="220" height="22" rx="4" fill="${C.K}"/><rect x="100" y="200" width="160" height="12" rx="6" fill="${C.W}"/>
+      <rect x="100" y="222" width="110" height="26" rx="13" fill="${C.O}"/>
+      ${[0, 1, 2].map(i => `<rect x="${100 + i * 136}" y="314" width="120" height="100" rx="10" fill="${C.P}"/><circle cx="${130 + i * 136}" cy="344" r="16" fill="${[C.B, C.O, C.Y][i]}"/>
+        <rect x="${114 + i * 136}" y="374" width="80" height="9" rx="4.5" fill="${C.K}"/><rect x="${114 + i * 136}" y="392" width="60" height="7" rx="3.5" fill="${C.G}"/>`).join('')}
+      <rect x="100" y="440" width="200" height="16" rx="4" fill="${C.K}"/>
+      <rect x="100" y="470" width="370" height="30" rx="15" fill="${C.P}" stroke="${C.K}" stroke-width="1.5"/>
+      <rect x="100" y="512" width="370" height="30" rx="15" fill="${C.P}" stroke="${C.K}" stroke-width="1.5"/>
+      <rect x="100" y="556" width="150" height="38" rx="19" fill="${C.K}"/>${label(175, 575, 'GET A QUOTE', C.W, 12)}`;
+    return `<rect width="800" height="450" fill="${C.Y}"/>
+      <rect x="540" y="250" width="220" height="150" rx="18" fill="${C.K}"/>
+      <rect x="556" y="266" width="188" height="118" rx="10" fill="${C.B}"/>
+      <path d="M572 300q14-10 28 0t28 0 28 0 28 0 28 0 28 0" fill="none" stroke="${C.W}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M572 336q14-10 28 0t28 0 28 0 28 0 28 0 28 0" fill="none" stroke="${C.W}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M700 230V300M728 230V300M700 248H728M700 272H728" fill="none" stroke="${C.W}" stroke-width="6" stroke-linecap="round"/>
+      <circle class="hv-rays" cx="650" cy="130" r="74" fill="none" stroke="${C.O}" stroke-width="12" stroke-dasharray="10 16"/>
+      <circle cx="650" cy="130" r="48" fill="${C.O}"/>
+      ${browser({ x: 70, y: 60, w: 430, h: 330, id: 'clip-pool', scroll: -220, content })}
+      ${cursor(330, 280)}`;
+  },
   // Portfolio site: the page scrolls and the project cards fan out.
   folio: () => {
     const content = `<rect x="100" y="110" width="60" height="10" rx="5" fill="${C.K}"/>
@@ -463,15 +488,17 @@ const CATS = {
 
 // Real projects only. `context` says where each was built; `tags` list only the tools actually used.
 const PROJECTS = [
+  { title: 'Mother City Pools', desc: 'A fast, secure website for a Cape Town swimming pool company, replacing their old WordPress site. Service pages, a quote form that emails each request to the owner, and a simple admin so the owner can update the content.', cat: 'web', context: 'Client website', tags: ['HTML', 'CSS', 'JavaScript', 'PHP'], art: 'pool', demo: 'https://www.mothercitypools.co.za/', demoLabel: 'Visit site' },
   { title: 'Lease Register: Property Tracker', desc: 'An internal app built for a property management team, letting property officers track the status of leases held for the departments they serve.', cat: 'system', context: 'Internal business tool', tags: ['Power Apps', 'Power Automate', 'Microsoft Lists'], art: 'lease' },
   { title: 'Leave Management App', desc: 'An app for submitting and tracking leave requests, backed by a SQL database on Supabase.', cat: 'system', context: 'Independent build', tags: ['Supabase', 'SQL'], art: 'leave', demo: 'https://mduduzigwija.github.io/Leave-Management-App/demo/' },
   { title: 'ImbizoConnect', desc: 'A concept platform for applying to several South African universities at once. Applicants capture their details once and apply to multiple institutions from a single place.', cat: 'web', context: 'Independent build', tags: ['JavaScript', 'Supabase', 'PostgreSQL'], art: 'uni', demo: 'https://mduduzigwija.github.io/ImbizoConnect/demo/' },
   { title: 'Personal Portfolio Site', desc: 'A personal portfolio website, designed and hand-coded from scratch to showcase projects and skills.', cat: 'web', context: 'Independent build', tags: ['HTML', 'CSS', 'JavaScript'], art: 'folio', demo: 'https://mduduzigwija.github.io/Mduduzi-Gwija-Profile-Site-1/', demoLabel: 'Visit site' }
 ];
 
-function caseCard(p, i) {
+function caseCard(p, i, list) {
   const cat = CATS[p.cat];
-  const wide = i % 3 === 0;
+  // A half-width card left alone on the last row goes full width instead.
+  const wide = i % 3 === 0 || (i === list.length - 1 && i % 3 === 1);
   const light = i % 3 !== 1;
   return `<article class="case reveal${wide ? ' case--wide' : ''}${light ? ' case--light' : ''}" style="--accent:${cat.accent}">
     <div class="case-head"><span class="tag">${cat.label}</span><span class="mono">${p.context}</span></div>
