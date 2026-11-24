@@ -461,6 +461,31 @@ const ART = {
       ${browser({ x: 70, y: 60, w: 430, h: 330, id: 'clip-pool', scroll: -220, content })}
       ${cursor(330, 280)}`;
   },
+  // Eish PDF: the page scrolls and a PDF page with a tick pops out.
+  eish: () => {
+    const content = `<rect x="100" y="112" width="160" height="26" rx="4" fill="${C.K}"/><rect x="100" y="146" width="110" height="26" rx="4" fill="#0a8f5a"/>
+      <rect x="100" y="190" width="300" height="10" rx="5" fill="${C.G}"/>
+      ${['UNLOCK', 'MERGE', 'SPLIT', 'EDIT'].map((t, i) => `<rect x="${100 + i * 84}" y="224" width="76" height="30" rx="15" fill="${i === 0 ? C.K : C.P}"/>${label(138 + i * 84, 239, t, i === 0 ? C.W : C.K, 9)}`).join('')}
+      <rect x="100" y="282" width="370" height="170" rx="14" fill="${C.P}" stroke="${C.G}" stroke-width="1.5" stroke-dasharray="6 6"/>
+      <rect x="262" y="318" width="46" height="46" rx="12" fill="#0a8f5a"/>${label(285, 386, 'DROP A PDF', C.K, 12)}
+      <rect x="100" y="480" width="370" height="130" rx="14" fill="${C.B}"/><rect x="124" y="504" width="140" height="12" rx="6" fill="${C.K}"/><rect x="124" y="528" width="220" height="8" rx="4" fill="${C.W}"/>`;
+    return `<rect width="800" height="450" fill="${C.Y}"/>
+      <g class="hv-fan hv-fan2"><rect x="575" y="130" width="150" height="200" rx="14" fill="${C.W}"/><rect x="591" y="152" width="90" height="10" rx="5" fill="${C.K}"/><rect x="591" y="176" width="118" height="8" rx="4" fill="${C.G}"/><rect x="591" y="194" width="100" height="8" rx="4" fill="${C.G}"/><circle cx="650" cy="276" r="24" fill="#0a8f5a"/><path d="M639 276l8 8 14-16" fill="none" stroke="${C.W}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
+      ${browser({ x: 70, y: 60, w: 430, h: 330, id: 'clip-eish', scroll: -200, content })}
+      ${cursor(330, 270)}`;
+  },
+  // Z83 Auto-Matcher: the page scrolls through posts, ticks land on the selected ones.
+  z83: () => {
+    const rows = [0, 1, 2, 3].map(i => `<rect x="100" y="${150 + i * 96}" width="370" height="80" rx="12" fill="${C.P}" stroke="${C.G}" stroke-width="1.5"/>
+      <rect x="116" y="${166 + i * 96}" width="20" height="20" rx="5" fill="${i % 2 ? C.W : C.K}" stroke="${C.K}" stroke-width="1.5"/>
+      <rect x="148" y="${168 + i * 96}" width="${[170, 130, 190, 150][i]}" height="12" rx="6" fill="${C.K}"/>
+      <rect x="148" y="${192 + i * 96}" width="230" height="8" rx="4" fill="${C.G}"/><rect x="148" y="${208 + i * 96}" width="90" height="14" rx="7" fill="${C.B}"/>`).join('');
+    const content = `<rect x="100" y="108" width="180" height="22" rx="4" fill="${C.K}"/>${rows}`;
+    return `<rect width="800" height="450" fill="${C.B}"/>
+      <g class="hv-fan hv-fan2"><rect x="565" y="120" width="170" height="220" rx="14" fill="${C.W}"/><rect x="581" y="140" width="60" height="10" rx="5" fill="${C.K}"/>${label(650, 206, 'Z83', C.K, 30)}<rect x="581" y="252" width="138" height="8" rx="4" fill="${C.G}"/><rect x="581" y="270" width="110" height="8" rx="4" fill="${C.G}"/><circle cx="700" cy="316" r="18" fill="${C.Y}"/><path d="M692 316l6 6 11-12" fill="none" stroke="${C.K}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>
+      ${browser({ x: 70, y: 60, w: 430, h: 330, id: 'clip-z83', scroll: -230, content })}
+      ${cursor(300, 280)}`;
+  },
   // Portfolio site: the page scrolls and the project cards fan out.
   folio: () => {
     const content = `<rect x="100" y="110" width="60" height="10" rx="5" fill="${C.K}"/>
@@ -494,6 +519,8 @@ const PROJECTS = [
   { title: 'Lease Register: Property Tracker', desc: 'An internal app built for a property management team, letting property officers track the status of leases held for the departments they serve.', cat: 'system', context: 'Internal business tool', tags: ['Power Apps', 'Power Automate', 'Microsoft Lists'], art: 'lease', privateNote: "This app is private to my workplace, so I can't share a live link." },
   { title: 'Leave Management App', desc: 'An app for submitting and tracking leave requests, backed by a SQL database on Supabase.', cat: 'system', context: 'Independent build', tags: ['Supabase', 'SQL'], art: 'leave', preview: { img: 'leave', dur: 9 }, demo: 'https://mduduzigwija.github.io/Leave-Management-App/demo/' },
   { title: 'ImbizoConnect', desc: 'A concept platform for applying to several South African universities at once. Applicants capture their details once and apply to multiple institutions from a single place.', cat: 'web', context: 'Independent build', tags: ['JavaScript', 'Supabase', 'PostgreSQL'], art: 'uni', preview: { img: 'uni' }, demo: 'https://mduduzigwija.github.io/ImbizoConnect/demo/' },
+  { title: 'Eish PDF', desc: 'Free PDF tools that run entirely in the browser, so files never leave the device. Unlock, merge, split, edit text (even on scanned pages), convert to and from Word, Excel and PowerPoint, compare and OCR. Open source.', cat: 'web', context: 'Independent build', tags: ['TypeScript', 'WebAssembly', 'MuPDF', 'Tesseract OCR'], art: 'eish', preview: { img: 'eish', dur: 12 }, demo: 'https://mduduzigwija.github.io/eish-pdf/', demoLabel: 'Try it' },
+  { title: 'Z83 Auto-Matcher', desc: 'A free tool for South African public service applicants. Upload a vacancy circular and your CV, see how each post matches, then download a ready-to-send Z83 + CV PDF for every post you choose. Nothing is uploaded.', cat: 'web', context: 'Independent build', tags: ['React', 'TypeScript', 'pdf.js', 'pdf-lib'], art: 'z83', preview: { img: 'z83', dur: 14 }, demo: 'https://mduduzigwija.github.io/z83-auto-matcher/', demoLabel: 'Try it' },
   { title: 'Personal Portfolio Site', desc: 'A personal portfolio website, designed and hand-coded from scratch to showcase projects and skills.', cat: 'web', context: 'Independent build', tags: ['HTML', 'CSS', 'JavaScript'], art: 'folio', preview: { img: 'folio' }, demo: 'https://mduduzigwija.github.io/Mduduzi-Gwija-Profile-Site-1/', demoLabel: 'Visit site' }
 ];
 
